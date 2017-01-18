@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @origami.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @origami.description %>
+</p>
+
+<%= link_to 'Edit', edit_origami_path(@origami) %> |
+<%= link_to 'Back', origamis_path %>

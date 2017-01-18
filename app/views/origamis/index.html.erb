@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Origamis</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @origamis.each do |origami| %>
+      <tr>
+        <td><%= origami.name %></td>
+        <td><%= origami.description %></td>
+        <td><%= link_to 'Show', origami %></td>
+        <td><%= link_to 'Edit', edit_origami_path(origami) %></td>
+        <td><%= link_to 'Destroy', origami, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Origami', new_origami_path %>

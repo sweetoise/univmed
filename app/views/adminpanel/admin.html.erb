@@ -1,0 +1,400 @@
+<section class="box-body">
+	<div class="callout callout-success">
+		<h4>Welcome!  <%= current_user.username %> ::||:: <span style="text-transform: uppercase; font-weight: bold;"><%= current_user.roles.first.name.titleize %></span></h4>
+		<p>
+			E-COURSESTUDY.COM is pleased to welcome YOU our esteemed Administrator aboard. We urge you to cross-check your data before entry. As many depend on the integrity of your input.
+			You have complete control over the above listed department courses materials. Please handle with care. Thank You.
+		</p>
+	</div>
+</section>
+<!-- Main content -->
+<% if current_user.has_role? :admin_user %>
+<section class="box-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Managed Content For All Administrators</h3>
+				</div><!-- /.box-header -->
+				<div class="box-body">
+					<table id="example1" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Level</th>
+								<th>Course Admins</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @users.reject {|user| user.department != current_user.department or user.roles.first.name == @not_admin_user or user.roles.first.name == @not_user}.each do |user| %>
+							<tr>
+								<td><%= user.level.grade if user.level.present? %></td>
+								<td class="red-links-profile"><%= link_to user.roles.first.name.titleize, edit_user_path(user) %></td>
+								<td><%= user.email %></td>
+							</tr>
+							<% end %>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>Level</th>
+								<th>Course Admins</th>
+								<th>Email</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div><!-- /.box-body -->
+			</div><!-- /.box -->
+		</div><!-- /.col -->
+	</div><!-- /.row -->
+</section>
+
+<% elsif current_user.has_role? :class_note_admin %>
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Managed Content For First Semester Courses</h3>
+				</div><!-- /.box-header -->
+				<div class="box-body">
+					<table id="example1" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Code</th>
+								<th>Title</th>
+								<th>Number Of Topics</th>
+								<th>Level</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% current_user.level.first_semester_courses.each do |first_semester_course| %>
+							<tr>
+								<td><%= first_semester_course.code %></td>
+								<td class="red-links-profile"><%= link_to first_semester_course.title, [:admin, first_semester_course] %></td>
+								<td><%= first_semester_course.first_semester_course_outlines.count %></td>
+								<td><%= first_semester_course.level.grade %></td>
+							</tr>
+							<% end %>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>Code</th>
+								<th>Title</th>
+								<th>Number Of Topics</th>
+								<th>Level</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div><!-- /.box-body -->
+			</div><!-- /.box -->
+		</div><!-- /.col -->
+	</div><!-- /.row -->
+</section>
+
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Managed Content For Second Semester Courses</h3>
+				</div><!-- /.box-header -->
+				<div class="box-body">
+					<table id="example2" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Code</th>
+								<th>Title</th>
+								<th>Number Of Topics</th>
+								<th>Level</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% current_user.level.second_semester_courses.each do |second_semester_course| %>
+							<tr>
+								<td><%= second_semester_course.code %></td>
+								<td class="red-links-profile"><%= link_to second_semester_course.title, [:admin, second_semester_course] %></td>
+								<td><%= second_semester_course.second_semester_course_outlines.count %></td>
+								<td><%= second_semester_course.level.grade %></td>
+							</tr>
+							<% end %>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>Code</th>
+								<th>Title</th>
+								<th>Number Of Topics</th>
+								<th>Level</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div><!-- /.box-body -->
+			</div><!-- /.box -->
+		</div><!-- /.col -->
+	</div><!-- /.row -->
+</section>
+<% elsif current_user.has_role? :library_admin %>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Managed Content For First Semester Library Books</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="example3" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th>Book pages</th>
+							<th>First semester course</th>
+							<th>Level</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% current_user.level.first_semester_library_books.each do |first_semester_library_book| %>
+						<tr>
+							<td class="red-links-profile"><%= link_to first_semester_library_book.name, [:admin, first_semester_library_book] %></td>
+							<td><%= first_semester_library_book.author %></td>
+							<td><%= first_semester_library_book.book_pages %></td>
+							<td><%= first_semester_library_book.first_semester_course.code %></td>
+							<td><%= first_semester_library_book.first_semester_course.level.grade %></td>
+							<td><%= link_to 'Edit', edit_admin_first_semester_library_book_path(first_semester_library_book) %></td>
+							<td><%= link_to 'Destroy', [:admin, first_semester_library_book], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+						</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th>Book pages</th>
+							<th>First semester course</th>
+							<th>Level</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Managed Content For Second Semester Library Books</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="example4" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th>Book pages</th>
+							<th>Second semester course</th>
+							<th>Level</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% current_user.department.second_semester_library_books.each do |second_semester_library_book| %>
+						<tr>
+							<td class="red-links-profile"><%= link_to second_semester_library_book.name, [:admin, second_semester_library_book] %></td>
+							<td><%= second_semester_library_book.author %></td>
+							<td><%= second_semester_library_book.book_pages %></td>
+							<td><%= second_semester_library_book.second_semester_course.code %></td>
+							<td><%= second_semester_library_book.second_semester_course.level.grade %></td>
+							<td><%= link_to 'Edit', edit_admin_second_semester_library_book_path(second_semester_library_book) %></td>
+							<td><%= link_to 'Destroy', [:admin, second_semester_library_book], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+						</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th>Book pages</th>
+							<th>Second semester course</th>
+							<th>Level</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+<% elsif current_user.has_role? :past_questions_admin %>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Managed Content For First Semester Past Questions</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="example5" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Year</th>
+							<th>First - Sem Course</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% current_user.department.first_semester_past_questions.each do |first_semester_past_question| %>
+						<tr>
+							<td class="red-links-profile"><%= link_to first_semester_past_question.year, [:admin, first_semester_past_question] %></td>
+							<td><%= first_semester_past_question.first_semester_course.code %></td>
+							<td><%= first_semester_past_question.first_semester_course.level.grade %></td>
+							<td><%= first_semester_past_question.first_semester_course.level.department.name %></td>
+							<td><%= first_semester_past_question.first_semester_course.level.faculty.name %></td>
+							<td><%= first_semester_past_question.first_semester_course.level.institution.name %></td>
+							<td><%= link_to 'Edit', edit_admin_first_semester_past_question_path(first_semester_past_question) %></td>
+							<td><%= link_to 'Destroy', [:admin, first_semester_past_question], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+						</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Year</th>
+							<th>First - Sem Course</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Managed Content For Second Semester Past Questions</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="example6" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Year</th>
+							<th>Second - Sem Course</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% current_user.department.second_semester_past_questions.each do |second_semester_past_question| %>
+						<tr>
+							<td class="red-links-profile"><%= link_to second_semester_past_question.year, [:admin, second_semester_past_question] %></td>
+							<td><%= second_semester_past_question.second_semester_course.code %></td>
+							<td><%= second_semester_past_question.second_semester_course.level.grade %></td>
+							<td><%= second_semester_past_question.second_semester_course.level.department.name %></td>
+							<td><%= second_semester_past_question.second_semester_course.level.faculty.name %></td>
+							<td><%= second_semester_past_question.second_semester_course.level.institution.name %></td>
+							<td><%= link_to 'Edit', edit_admin_second_semester_past_question_path(second_semester_past_question) %></td>
+							<td><%= link_to 'Destroy', [:admin, second_semester_past_question], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+						</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Year</th>
+							<th>Second - Sem Course</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+<% elsif current_user.has_role? :voucher_admin %>
+
+<% if Pin.all.count < 100 %>
+<div class="box-body">
+	<div class="callout callout-warning">
+		<h4><i class="icon fa fa-warning"></i> Low Pin Stock Alert! [ <%= Pin.all.count %> ]</h4>
+		<p>
+			You have less than a hundred pins left. Users have almost run outta pins. You should contact the appropriate authorities quickly.
+		</p>
+	</div>
+</div><!-- /.box-body -->
+<% else %>
+<% end %>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Managed Content For Users without <b style="color: red;">** PIN ACCESS **</b></h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="example8" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Nationality</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @users_without_pin_access.each do |user| %>
+						<tr>
+							<td class="red-links-profile"><%= link_to user.username, edit_user_path(user) %></td>
+							<td><%= user.email %></td>
+							<td><%= user.level.grade %></td>
+							<td><%= user.department.name %></td>
+							<td><%= user.faculty.name %></td>
+							<td><%= user.institution.name %></td>
+							<td><%= user.nationality.name %></td>
+						</tr>
+						<% end %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Level</th>
+							<th>Department</th>
+							<th>Faculty</th>
+							<th>Institution</th>
+							<th>Nationality</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+
+<% end %>
+

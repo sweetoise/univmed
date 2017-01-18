@@ -1,0 +1,2 @@
+class Origami < ApplicationRecord
+end
